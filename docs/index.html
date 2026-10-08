@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<title>Axon</title>
+<style>
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { margin:0; width:1280px; height:720px; background:#0f1117; color:#e6e8ef; overflow:hidden; }
+  .app { display:flex; flex-direction:column; height:100%; }
+  header { padding:18px 30px; border-bottom:1px solid #222838; display:flex; align-items:baseline; gap:14px; }
+  header h1 { margin:0; font-size:26px; color:#7dd3fc; }
+  header p { margin:0; font-size:13px; color:#9aa3b2; }
+  .main { flex:1; display:flex; gap:20px; padding:24px 30px; }
+  .card { background:#161a24; border:1px solid #232838; border-radius:12px; padding:20px; }
+  .marketplace { flex:2; }
+  .sidebar { flex:1; display:flex; flex-direction:column; }
+  h2 { margin-top:0; font-size:18px; color:#f0f2f6; }
+  h3 { margin-top:0; font-size:15px; color:#f0f2f6; }
+  .agent-row { font-size:14px; color:#9aa3b2; margin-bottom:16px; }
+  button { background:#4f7cff; color:#fff; border:none; padding:10px 16px; border-radius:8px; font-size:14px; cursor:pointer; margin-top:10px; }
+  button:hover { background:#3b63e0; }
+  .hidden { display:none; }
+  .panel { margin-top:14px; padding:14px; background:#1d2230; border-radius:8px; font-size:14px; line-height:1.5; }
+  .log { flex:1; margin-top:12px; background:#0d1017; border-radius:8px; padding:10px; font-size:12px; color:#8fa0bd; overflow:hidden; }
+  .log div { margin-bottom:6px; }
+  .score { color:#4ade80; font-weight:bold; cursor:pointer; }
+  footer { padding:10px 30px; font-size:11px; color:#636b7a; border-top:1px solid #222838; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Axon</h1>
+    <p>Payment rails and escrow for autonomous AI agents on Solana</p>
+  </header>
+  <div class="main">
+    <div class="card marketplace">
+      <h2>Demo Marketplace</h2>
+      <div class="agent-row">Agent A (Buyer) &#8596; Agent B (Data Provider)</div>
+      <button data-demo="request-btn" onclick="requestService()">Request Data Service</button>
+
+      <div id="quote-panel" data-demo="quote-panel" class="panel hidden">
+        Agent B quote: <b>0.05 SOL</b> for dataset access (500ms response).
+        <br><button data-demo="accept-btn" onclick="acceptQuote()">Accept &amp; Lock Escrow</button>
+      </div>
+
+      <div id="escrow-panel" data-demo="escrow-panel" class="panel hidden">
+        🔒 Escrow locked: <b>0.05 SOL</b> held in Anchor smart contract.
+        <br><button data-demo="complete-btn" onclick="completeTask()">Confirm Task Completion</button>
+      </div>
+
+      <div id="result-panel" data-demo="result-panel" class="panel hidden">
+        ✅ Webhook verified task completion. Payment released to Agent B.
+      </div>
+    </div>
+
+    <div class="card sidebar">
+      <h3>Reputation Registry</h3>
+      <div>Agent B score: <span class="score" data-demo="rep-score" id="rep-score" onclick="bumpScore()">98%</span></div>
+      <div class="log" id="log" data-demo="log">
+        <div>&gt; Marketplace idle. Waiting for requests...</div>
+      </div>
+    </div>
+  </div>
+  <footer>Prototype — all data is simulated</footer>
+</div>
+
+<script>
+function addLog(msg){
+  var log = document.getElementById('log');
+  var d = document.createElement('div');
+  d.textContent = '> ' + msg;
+  log.appendChild(d);
+}
+function requestService(){
+  document.getElementById('quote-panel').classList.remove('hidden');
+  addLog('Agent A requested data service from Agent B.');
+  addLog('Agent B returned quote: 0.05 SOL.');
+}
+function acceptQuote(){
+  document.getElementById('escrow-panel').classList.remove('hidden');
+  addLog('Agent A accepted quote. Escrow contract funded.');
+}
+function completeTask(){
+  document.getElementById('result-panel').classList.remove('hidden');
+  addLog('Task completion proof received via webhook.');
+  addLog('Escrow released 0.05 SOL to Agent B.');
+}
+var scoreBumped = false;
+function bumpScore(){
+  if(scoreBumped) return;
+  scoreBumped = true;
+  document.getElementById('rep-score').textContent = '99%';
+  addLog('Agent B reputation updated to 99% after success.');
+}
+</script>
+</body>
+</html>
